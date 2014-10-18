@@ -1,6 +1,25 @@
 class Solver
 	dimension = 9
 	symbols = [1,2,3,4,5,6,7,8,9]
+	indexCollections = []
+	allIndices = []
+
+	constructor: () ->
+		# Precalculate all indices
+		for x in [0...dimension]
+			for y in [0...dimension]
+				allIndices.push @getCellIndex(x,y)
+
+		# Precalculate collections of indices to check for duplicate symbols
+		for y in [0...dimension]
+			indexCollections.push (@getCellIndex(x,y) for x in [0...dimension])
+		for x in [0...dimension]
+			indexCollections.push (@getCellIndex(x,y) for y in [0...dimension])
+		# TODO: Calculate the box offsets
+		boxCellOffsets = [0,1,2,9,10,11,18,19,20]
+		boxStartOffsets = [0,3,6,27,30,33,54,57,60]
+		for box in [0...dimension]
+			indexCollections.push (boxStartOffsets[box] + cellOffset for cellOffset in boxCellOffsets)
 
 	solve: (grid) ->
 		return null if not @isValid grid
@@ -20,17 +39,6 @@ class Solver
 		return null
 
 	isValid: (grid) ->
-		# Build collections of indices to check for duplicate symbols
-		indexCollections = []
-		for y in [0...dimension]
-			indexCollections.push (@getCellIndex(x,y) for x in [0...dimension])
-		for x in [0...dimension]
-			indexCollections.push (@getCellIndex(x,y) for y in [0...dimension])
-		# TODO: Calculate the box offsets
-		boxCellOffsets = [0,1,2,9,10,11,18,19,20]
-		boxStartOffsets = [0,3,6,27,30,33,54,57,60]
-		for box in [0...dimension]
-			indexCollections.push (boxStartOffsets[box] + cellOffset for cellOffset in boxCellOffsets)
 		# Look for duplicate symbols in each collection
 		for symbol in symbols
 			for indices in indexCollections
@@ -44,10 +52,6 @@ class Solver
 		return emptyCellIndices.length is 0
 
 	getEmptyCellIndices: (grid) ->
-		allIndices = []
-		for x in [0...dimension]
-			for y in [0...dimension]
-				allIndices.push @getCellIndex(x,y)
 		return @getIndicesMatchingSymbol grid, allIndices, null
 
 	getIndicesMatchingSymbol: (grid, indices, symbol) ->
