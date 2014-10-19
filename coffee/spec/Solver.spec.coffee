@@ -26,6 +26,6 @@ describe "Solver", ->
 			result = solver.solve new Grid(GridData.mainlyCompleteGrid)
 			expect(result.data).toEqual GridData.completeGrid
 
-		it "should solve newspaper grid", ->
+		xit "should solve newspaper grid", ->
 			result = solver.solve new Grid(GridData.newspaperGrid)
 			expect(result.data).not.toBeNull()

@@ -1,11 +1,13 @@
 class Solver
+	constructor: ->
+		@moveStrategy = new RandomMoveStrategy()
 
 	solve: (grid) ->
 		return null if not grid.isValid()
 		return grid if grid.isFilled()
 
 		# Try to solve a cell
-		movesToTry = @getCandidateMoves grid
+		movesToTry = @moveStrategy.getCandidateMoves grid
 		for move in movesToTry
 			# Recurse. NB This will obviously gobble stack space
 			newGrid = grid.clone()
@@ -15,6 +17,8 @@ class Solver
 
 		# Failed to find a move leading to a valid solution
 		return null
+
+class RandomMoveStrategy
 
 	getCandidateMoves: (grid) ->
 		emptyCellIndices = grid.getEmptyCellIndices()
