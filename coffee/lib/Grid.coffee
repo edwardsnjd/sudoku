@@ -1,5 +1,5 @@
 class Grid
-	
+
 	constructor: (@data) ->
 		@order = 3
 		@dimension = @order * @order
@@ -51,5 +51,24 @@ class Grid
 
 	clone: ->
 		return new Grid(@data.slice())
+
+	getValidValues: (x,y) ->
+		index = @getCellIndex x, y
+		return @getValidValuesByIndex index
+
+	getValidValuesByIndex: (index) ->
+		return [] if @data[index]
+
+		contains = (list, item) -> list.indexOf(item) >= 0
+
+		relevantCollections = (indices for indices in @indexCollections when contains(indices, index))
+		symbolsUsedByCollection = (@getSymbolsUsed(indices) for indices in relevantCollections)
+		usedSymbols = [].concat.apply [], symbolsUsedByCollection
+		unusedSymbols = (symbol for symbol in @symbols when not contains(usedSymbols, symbol))
+
+		return unusedSymbols
+
+	getSymbolsUsed: (indices) ->
+		@data[ind] for ind in indices when @data[ind]?
 
 this.Grid = Grid

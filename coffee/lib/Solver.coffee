@@ -1,6 +1,10 @@
 class Solver
+
 	constructor: ->
-		@moveStrategy = new RandomMoveStrategy()
+		oavs =  new OnlyAvailableValueStrategy()
+		oaps =  new OnlyPositionInCollectionStrategy()
+		rms =  new RandomMoveStrategy()
+		@moveStrategy = new PrioritisedStrategy [oavs, oaps, rms]
 
 	solve: (grid) ->
 		return null if not grid.isValid()
@@ -13,16 +17,12 @@ class Solver
 			newGrid = grid.clone()
 			newGrid.data[move.index] = move.symbol
 			solvedNewGrid = @solve newGrid
-			return solvedNewGrid if solvedNewGrid?
+			if solvedNewGrid?
+				return solvedNewGrid 
+			else
+				console.log "failed move"
 
 		# Failed to find a move leading to a valid solution
 		return null
-
-class RandomMoveStrategy
-
-	getCandidateMoves: (grid) ->
-		emptyCellIndices = grid.getEmptyCellIndices()
-		indexToSet = emptyCellIndices[0]
-		return ({index: indexToSet, symbol: symbol} for symbol in grid.symbols)
 
 this.Solver = Solver
