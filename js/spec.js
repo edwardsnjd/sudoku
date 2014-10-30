@@ -3,25 +3,21 @@
   var Grid, RandomMoveStrategy, Solver;
 
   Grid = (function() {
-    var allIndices, indexCollections;
-
-    indexCollections = [];
-
-    allIndices = [];
-
     function Grid(data) {
       var boxX, boxY, indicesForThisBox, startX, startY, x, y, _i, _j, _k, _l, _m, _n, _o, _p, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
       this.data = data;
       this.order = 3;
       this.dimension = this.order * this.order;
       this.symbols = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+      this.allIndices = [];
       for (x = _i = 0, _ref = this.dimension; 0 <= _ref ? _i < _ref : _i > _ref; x = 0 <= _ref ? ++_i : --_i) {
         for (y = _j = 0, _ref1 = this.dimension; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; y = 0 <= _ref1 ? ++_j : --_j) {
-          allIndices.push(this.getCellIndex(x, y));
+          this.allIndices.push(this.getCellIndex(x, y));
         }
       }
+      this.indexCollections = [];
       for (y = _k = 0, _ref2 = this.dimension; 0 <= _ref2 ? _k < _ref2 : _k > _ref2; y = 0 <= _ref2 ? ++_k : --_k) {
-        indexCollections.push((function() {
+        this.indexCollections.push((function() {
           var _l, _ref3, _results;
           _results = [];
           for (x = _l = 0, _ref3 = this.dimension; 0 <= _ref3 ? _l < _ref3 : _l > _ref3; x = 0 <= _ref3 ? ++_l : --_l) {
@@ -31,7 +27,7 @@
         }).call(this));
       }
       for (x = _l = 0, _ref3 = this.dimension; 0 <= _ref3 ? _l < _ref3 : _l > _ref3; x = 0 <= _ref3 ? ++_l : --_l) {
-        indexCollections.push((function() {
+        this.indexCollections.push((function() {
           var _m, _ref4, _results;
           _results = [];
           for (y = _m = 0, _ref4 = this.dimension; 0 <= _ref4 ? _m < _ref4 : _m > _ref4; y = 0 <= _ref4 ? ++_m : --_m) {
@@ -50,18 +46,19 @@
               indicesForThisBox.push(this.getCellIndex(x, y));
             }
           }
-          indexCollections.push(indicesForThisBox);
+          this.indexCollections.push(indicesForThisBox);
         }
       }
     }
 
     Grid.prototype.isValid = function() {
-      var indices, indicesWithSymbol, symbol, _i, _j, _len, _len1, _ref;
+      var indices, indicesWithSymbol, symbol, _i, _j, _len, _len1, _ref, _ref1;
       _ref = this.symbols;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         symbol = _ref[_i];
-        for (_j = 0, _len1 = indexCollections.length; _j < _len1; _j++) {
-          indices = indexCollections[_j];
+        _ref1 = this.indexCollections;
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          indices = _ref1[_j];
           indicesWithSymbol = this.getIndicesMatchingSymbol(indices, symbol);
           if (indicesWithSymbol.length > 1) {
             return false;
@@ -76,7 +73,7 @@
     };
 
     Grid.prototype.getEmptyCellIndices = function() {
-      return this.getIndicesMatchingSymbol(allIndices, null);
+      return this.getIndicesMatchingSymbol(this.allIndices, null);
     };
 
     Grid.prototype.getIndicesMatchingSymbol = function(indices, symbol) {

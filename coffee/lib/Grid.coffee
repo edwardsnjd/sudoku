@@ -1,22 +1,22 @@
 class Grid
-	indexCollections = []
-	allIndices = []
-
+	
 	constructor: (@data) ->
 		@order = 3
 		@dimension = @order * @order
 		@symbols = [1,2,3,4,5,6,7,8,9]
 
 		# Precalculate all indices
+		@allIndices = []
 		for x in [0...@dimension]
 			for y in [0...@dimension]
-				allIndices.push @getCellIndex(x,y)
+				@allIndices.push @getCellIndex(x,y)
 
 		# Precalculate collections of indices to check for duplicate symbols
+		@indexCollections = []
 		for y in [0...@dimension]
-			indexCollections.push (@getCellIndex(x,y) for x in [0...@dimension])
+			@indexCollections.push (@getCellIndex(x,y) for x in [0...@dimension])
 		for x in [0...@dimension]
-			indexCollections.push (@getCellIndex(x,y) for y in [0...@dimension])
+			@indexCollections.push (@getCellIndex(x,y) for y in [0...@dimension])
 		# Calculate the boxes' indices
 		for boxX in [0...@order]
 			for boxY in [0...@order]
@@ -26,12 +26,12 @@ class Grid
 				for x in [startX...startX+@order]
 					for y in [startY...startY+@order]
 						indicesForThisBox.push @getCellIndex(x,y)
-				indexCollections.push indicesForThisBox
+				@indexCollections.push indicesForThisBox
 
 	isValid: ->
 		# Look for duplicate symbols in each collection
 		for symbol in @symbols
-			for indices in indexCollections
+			for indices in @indexCollections
 				indicesWithSymbol = @getIndicesMatchingSymbol indices, symbol
 				return false if indicesWithSymbol.length > 1
 		# No duplicates, so it's a valid state
@@ -41,7 +41,7 @@ class Grid
 		return @getEmptyCellIndices().length is 0
 
 	getEmptyCellIndices: ->
-		return @getIndicesMatchingSymbol allIndices, null
+		return @getIndicesMatchingSymbol @allIndices, null
 
 	getIndicesMatchingSymbol: (indices, symbol) ->
 		return (index for index in indices when @data[index] is symbol)
