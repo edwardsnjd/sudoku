@@ -1,74 +1,83 @@
 class Grid
 
 	constructor: (@data) ->
-		@order = 3
-		@dimension = @order * @order
 		@symbols = [1,2,3,4,5,6,7,8,9]
 
+		@_order = 3
+		@_dimension = @_order * @_order
+
 		# Precalculate all indices
-		@allIndices = []
-		for x in [0...@dimension]
-			for y in [0...@dimension]
-				@allIndices.push @getCellIndex(x,y)
+		@_allCells = []
+		for x in [0...@_dimension]
+			for y in [0...@_dimension]
+				@_allCells.push {x:x,y:y}
 
 		# Precalculate collections of indices to check for duplicate symbols
-		@indexCollections = []
-		for y in [0...@dimension]
-			@indexCollections.push (@getCellIndex(x,y) for x in [0...@dimension])
-		for x in [0...@dimension]
-			@indexCollections.push (@getCellIndex(x,y) for y in [0...@dimension])
+		@collections = []
+		for y in [0...@_dimension]
+			@collections.push ({x:x,y:y} for x in [0...@_dimension])
+		for x in [0...@_dimension]
+			@collections.push ({x:x,y:y} for y in [0...@_dimension])
 		# Calculate the boxes' indices
-		for boxX in [0...@order]
-			for boxY in [0...@order]
-				indicesForThisBox = []
-				startX = boxX * @order
-				startY = boxY * @order
-				for x in [startX...startX+@order]
-					for y in [startY...startY+@order]
-						indicesForThisBox.push @getCellIndex(x,y)
-				@indexCollections.push indicesForThisBox
+		for boxX in [0...@_order]
+			for boxY in [0...@_order]
+				cellsInThisBox = []
+				startX = boxX * @_order
+				startY = boxY * @_order
+				for x in [startX...startX+@_order]
+					for y in [startY...startY+@_order]
+						cellsInThisBox.push {x:x,y:y}
+				@collections.push cellsInThisBox
 
 	isValid: ->
 		# Look for duplicate symbols in each collection
 		for symbol in @symbols
-			for indices in @indexCollections
-				indicesWithSymbol = @getIndicesMatchingSymbol indices, symbol
-				return false if indicesWithSymbol.length > 1
+			for cells in @collections
+				cellsWithSymbol = @_getCellsMatchingSymbol cells, symbol
+				return false if cellsWithSymbol.length > 1
 		# No duplicates, so it's a valid state
 		return true
 
 	isFilled: ->
-		return @getEmptyCellIndices().length is 0
+		return @getEmptyCells().length is 0
 
-	getEmptyCellIndices: ->
-		return @getIndicesMatchingSymbol @allIndices, null
+	getEmptyCells: ->
+		return @_getCellsMatchingSymbol @_allCells, null
 
-	getIndicesMatchingSymbol: (indices, symbol) ->
-		return (index for index in indices when @data[index] is symbol)
+	getCellValue: (cell) ->
+		index = @_getCellIndex cell
+		return @data[index]
 
-	getCellIndex: (x,y) ->
-		return @dimension*y + x
+	setCellValue: (cell, value) ->
+		index = @_getCellIndex cell
+		@data[index] = value
+
+	_getCellIndex: (cell) ->
+		return @_dimension*cell.y + cell.x
+
+	_getCellsMatchingSymbol: (cells, symbol) ->
+		return (cell for cell in cells when @getCellValue(cell) is symbol)
 
 	clone: ->
 		return new Grid(@data.slice())
 
-	getValidValues: (x,y) ->
-		index = @getCellIndex x, y
-		return @getValidValuesByIndex index
+	getValidValues: (cell) ->
+		return [] if @data[@_getCellIndex cell]?
 
-	getValidValuesByIndex: (index) ->
-		return [] if @data[index]
+		contains = (list, item) ->
+			list.indexOf(item) >= 0
+		containsCell = (cells, cell) ->
+			for testCell in cells
+				return true if testCell.x is cell.x and testCell.y is cell.y
+			return false
+		getSymbolsUsed = (cells) =>
+			@getCellValue(cell) for cell in cells when @getCellValue(cell)?
 
-		contains = (list, item) -> list.indexOf(item) >= 0
-
-		relevantCollections = (indices for indices in @indexCollections when contains(indices, index))
-		symbolsUsedByCollection = (@getSymbolsUsed(indices) for indices in relevantCollections)
-		usedSymbols = [].concat.apply [], symbolsUsedByCollection
+		relevantCollections = (cells for cells in @collections when containsCell(cells, cell))
+		symbolsUsedByRelevantCollection = (getSymbolsUsed cells for cells in relevantCollections)
+		usedSymbols = [].concat.apply [], symbolsUsedByRelevantCollection
 		unusedSymbols = (symbol for symbol in @symbols when not contains(usedSymbols, symbol))
 
 		return unusedSymbols
-
-	getSymbolsUsed: (indices) ->
-		@data[ind] for ind in indices when @data[ind]?
 
 this.Grid = Grid

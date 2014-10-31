@@ -3,18 +3,18 @@ class OnlyPositionInCollectionStrategy
 	getCandidateMoves: (grid) ->
 		moves = []
 
-		for collection in grid.indexCollections
+		for cells in grid.collections
 
 			positions = {}
 			for symbol in grid.symbols
 				positions[symbol] = []
-			for index in collection
-				for validValue in grid.getValidValuesByIndex(index)
-					positions[validValue].push index
+			for cell in cells
+				for validValue in grid.getValidValues cell
+					positions[validValue].push cell
 
 			for symbol in grid.symbols
 				symbolPositions = positions[symbol]
 				if symbolPositions.length is 1
-					moves.push {index: symbolPositions[0], symbol: symbol}
+					moves.push {cell: symbolPositions[0], symbol: symbol}
 
 		return moves

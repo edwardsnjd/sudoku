@@ -15,12 +15,10 @@ class Solver
 		for move in movesToTry
 			# Recurse. NB This will obviously gobble stack space
 			newGrid = grid.clone()
-			newGrid.data[move.index] = move.symbol
+			newGrid.setCellValue move.cell, move.symbol
 			solvedNewGrid = @solve newGrid
 			if solvedNewGrid?
-				return solvedNewGrid 
-			else
-				console.log "failed move"
+				return solvedNewGrid
 
 		# Failed to find a move leading to a valid solution
 		return null

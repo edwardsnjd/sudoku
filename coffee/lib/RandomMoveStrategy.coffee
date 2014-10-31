@@ -1,7 +1,7 @@
 class RandomMoveStrategy
 
 	getCandidateMoves: (grid) ->
-		emptyCellIndices = grid.getEmptyCellIndices()
-		indexToSet = emptyCellIndices[0]
-		validValues = grid.getValidValuesByIndex(indexToSet)
-		return ({index: indexToSet, symbol: symbol} for symbol in validValues)
+		emptyCells = grid.getEmptyCells()
+		cellToSet = emptyCells[0]
+		validValues = grid.getValidValues cellToSet
+		return ({cell: cellToSet, symbol: symbol} for symbol in validValues)

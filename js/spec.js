@@ -4,63 +4,75 @@
 
   Grid = (function() {
     function Grid(data) {
-      var boxX, boxY, indicesForThisBox, startX, startY, x, y, _i, _j, _k, _l, _m, _n, _o, _p, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
+      var boxX, boxY, cellsInThisBox, startX, startY, x, y, _i, _j, _k, _l, _m, _n, _o, _p, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
       this.data = data;
-      this.order = 3;
-      this.dimension = this.order * this.order;
       this.symbols = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-      this.allIndices = [];
-      for (x = _i = 0, _ref = this.dimension; 0 <= _ref ? _i < _ref : _i > _ref; x = 0 <= _ref ? ++_i : --_i) {
-        for (y = _j = 0, _ref1 = this.dimension; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; y = 0 <= _ref1 ? ++_j : --_j) {
-          this.allIndices.push(this.getCellIndex(x, y));
+      this._order = 3;
+      this._dimension = this._order * this._order;
+      this._allCells = [];
+      for (x = _i = 0, _ref = this._dimension; 0 <= _ref ? _i < _ref : _i > _ref; x = 0 <= _ref ? ++_i : --_i) {
+        for (y = _j = 0, _ref1 = this._dimension; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; y = 0 <= _ref1 ? ++_j : --_j) {
+          this._allCells.push({
+            x: x,
+            y: y
+          });
         }
       }
-      this.indexCollections = [];
-      for (y = _k = 0, _ref2 = this.dimension; 0 <= _ref2 ? _k < _ref2 : _k > _ref2; y = 0 <= _ref2 ? ++_k : --_k) {
-        this.indexCollections.push((function() {
+      this.collections = [];
+      for (y = _k = 0, _ref2 = this._dimension; 0 <= _ref2 ? _k < _ref2 : _k > _ref2; y = 0 <= _ref2 ? ++_k : --_k) {
+        this.collections.push((function() {
           var _l, _ref3, _results;
           _results = [];
-          for (x = _l = 0, _ref3 = this.dimension; 0 <= _ref3 ? _l < _ref3 : _l > _ref3; x = 0 <= _ref3 ? ++_l : --_l) {
-            _results.push(this.getCellIndex(x, y));
+          for (x = _l = 0, _ref3 = this._dimension; 0 <= _ref3 ? _l < _ref3 : _l > _ref3; x = 0 <= _ref3 ? ++_l : --_l) {
+            _results.push({
+              x: x,
+              y: y
+            });
           }
           return _results;
         }).call(this));
       }
-      for (x = _l = 0, _ref3 = this.dimension; 0 <= _ref3 ? _l < _ref3 : _l > _ref3; x = 0 <= _ref3 ? ++_l : --_l) {
-        this.indexCollections.push((function() {
+      for (x = _l = 0, _ref3 = this._dimension; 0 <= _ref3 ? _l < _ref3 : _l > _ref3; x = 0 <= _ref3 ? ++_l : --_l) {
+        this.collections.push((function() {
           var _m, _ref4, _results;
           _results = [];
-          for (y = _m = 0, _ref4 = this.dimension; 0 <= _ref4 ? _m < _ref4 : _m > _ref4; y = 0 <= _ref4 ? ++_m : --_m) {
-            _results.push(this.getCellIndex(x, y));
+          for (y = _m = 0, _ref4 = this._dimension; 0 <= _ref4 ? _m < _ref4 : _m > _ref4; y = 0 <= _ref4 ? ++_m : --_m) {
+            _results.push({
+              x: x,
+              y: y
+            });
           }
           return _results;
         }).call(this));
       }
-      for (boxX = _m = 0, _ref4 = this.order; 0 <= _ref4 ? _m < _ref4 : _m > _ref4; boxX = 0 <= _ref4 ? ++_m : --_m) {
-        for (boxY = _n = 0, _ref5 = this.order; 0 <= _ref5 ? _n < _ref5 : _n > _ref5; boxY = 0 <= _ref5 ? ++_n : --_n) {
-          indicesForThisBox = [];
-          startX = boxX * this.order;
-          startY = boxY * this.order;
-          for (x = _o = startX, _ref6 = startX + this.order; startX <= _ref6 ? _o < _ref6 : _o > _ref6; x = startX <= _ref6 ? ++_o : --_o) {
-            for (y = _p = startY, _ref7 = startY + this.order; startY <= _ref7 ? _p < _ref7 : _p > _ref7; y = startY <= _ref7 ? ++_p : --_p) {
-              indicesForThisBox.push(this.getCellIndex(x, y));
+      for (boxX = _m = 0, _ref4 = this._order; 0 <= _ref4 ? _m < _ref4 : _m > _ref4; boxX = 0 <= _ref4 ? ++_m : --_m) {
+        for (boxY = _n = 0, _ref5 = this._order; 0 <= _ref5 ? _n < _ref5 : _n > _ref5; boxY = 0 <= _ref5 ? ++_n : --_n) {
+          cellsInThisBox = [];
+          startX = boxX * this._order;
+          startY = boxY * this._order;
+          for (x = _o = startX, _ref6 = startX + this._order; startX <= _ref6 ? _o < _ref6 : _o > _ref6; x = startX <= _ref6 ? ++_o : --_o) {
+            for (y = _p = startY, _ref7 = startY + this._order; startY <= _ref7 ? _p < _ref7 : _p > _ref7; y = startY <= _ref7 ? ++_p : --_p) {
+              cellsInThisBox.push({
+                x: x,
+                y: y
+              });
             }
           }
-          this.indexCollections.push(indicesForThisBox);
+          this.collections.push(cellsInThisBox);
         }
       }
     }
 
     Grid.prototype.isValid = function() {
-      var indices, indicesWithSymbol, symbol, _i, _j, _len, _len1, _ref, _ref1;
+      var cells, cellsWithSymbol, symbol, _i, _j, _len, _len1, _ref, _ref1;
       _ref = this.symbols;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         symbol = _ref[_i];
-        _ref1 = this.indexCollections;
+        _ref1 = this.collections;
         for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-          indices = _ref1[_j];
-          indicesWithSymbol = this.getIndicesMatchingSymbol(indices, symbol);
-          if (indicesWithSymbol.length > 1) {
+          cells = _ref1[_j];
+          cellsWithSymbol = this._getCellsMatchingSymbol(cells, symbol);
+          if (cellsWithSymbol.length > 1) {
             return false;
           }
         }
@@ -69,72 +81,101 @@
     };
 
     Grid.prototype.isFilled = function() {
-      return this.getEmptyCellIndices().length === 0;
+      return this.getEmptyCells().length === 0;
     };
 
-    Grid.prototype.getEmptyCellIndices = function() {
-      return this.getIndicesMatchingSymbol(this.allIndices, null);
+    Grid.prototype.getEmptyCells = function() {
+      return this._getCellsMatchingSymbol(this._allCells, null);
     };
 
-    Grid.prototype.getIndicesMatchingSymbol = function(indices, symbol) {
+    Grid.prototype.getCellValue = function(cell) {
       var index;
+      index = this._getCellIndex(cell);
+      return this.data[index];
+    };
+
+    Grid.prototype.setCellValue = function(cell, value) {
+      var index;
+      index = this._getCellIndex(cell);
+      return this.data[index] = value;
+    };
+
+    Grid.prototype._getCellIndex = function(cell) {
+      return this._dimension * cell.y + cell.x;
+    };
+
+    Grid.prototype._getCellsMatchingSymbol = function(cells, symbol) {
+      var cell;
       return (function() {
         var _i, _len, _results;
         _results = [];
-        for (_i = 0, _len = indices.length; _i < _len; _i++) {
-          index = indices[_i];
-          if (this.data[index] === symbol) {
-            _results.push(index);
+        for (_i = 0, _len = cells.length; _i < _len; _i++) {
+          cell = cells[_i];
+          if (this.getCellValue(cell) === symbol) {
+            _results.push(cell);
           }
         }
         return _results;
       }).call(this);
-    };
-
-    Grid.prototype.getCellIndex = function(x, y) {
-      return this.dimension * y + x;
     };
 
     Grid.prototype.clone = function() {
       return new Grid(this.data.slice());
     };
 
-    Grid.prototype.getValidValues = function(x, y) {
-      var index;
-      index = this.getCellIndex(x, y);
-      return this.getValidValuesByIndex(index);
-    };
-
-    Grid.prototype.getValidValuesByIndex = function(index) {
-      var contains, indices, relevantCollections, symbol, symbolsUsedByCollection, unusedSymbols, usedSymbols;
-      if (this.data[index]) {
+    Grid.prototype.getValidValues = function(cell) {
+      var cells, contains, containsCell, getSymbolsUsed, relevantCollections, symbol, symbolsUsedByRelevantCollection, unusedSymbols, usedSymbols;
+      if (this.data[this._getCellIndex(cell)] != null) {
         return [];
       }
       contains = function(list, item) {
         return list.indexOf(item) >= 0;
       };
+      containsCell = function(cells, cell) {
+        var testCell, _i, _len;
+        for (_i = 0, _len = cells.length; _i < _len; _i++) {
+          testCell = cells[_i];
+          if (testCell.x === cell.x && testCell.y === cell.y) {
+            return true;
+          }
+        }
+        return false;
+      };
+      getSymbolsUsed = (function(_this) {
+        return function(cells) {
+          var _i, _len, _results;
+          _results = [];
+          for (_i = 0, _len = cells.length; _i < _len; _i++) {
+            cell = cells[_i];
+            if (_this.getCellValue(cell) != null) {
+              _results.push(_this.getCellValue(cell));
+            }
+          }
+          return _results;
+        };
+      })(this);
       relevantCollections = (function() {
         var _i, _len, _ref, _results;
-        _ref = this.indexCollections;
+        _ref = this.collections;
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          indices = _ref[_i];
-          if (contains(indices, index)) {
-            _results.push(indices);
+          cells = _ref[_i];
+          if (containsCell(cells, cell)) {
+            _results.push(cells);
           }
         }
         return _results;
       }).call(this);
-      symbolsUsedByCollection = (function() {
+      symbolsUsedByRelevantCollection = (function() {
         var _i, _len, _results;
         _results = [];
         for (_i = 0, _len = relevantCollections.length; _i < _len; _i++) {
-          indices = relevantCollections[_i];
-          _results.push(this.getSymbolsUsed(indices));
+          cells = relevantCollections[_i];
+          _results.push(getSymbolsUsed(cells));
         }
         return _results;
-      }).call(this);
-      usedSymbols = [].concat.apply([], symbolsUsedByCollection);
+      })();
+      usedSymbols = [].concat.apply([], symbolsUsedByRelevantCollection);
       unusedSymbols = (function() {
         var _i, _len, _ref, _results;
         _ref = this.symbols;
@@ -150,18 +191,6 @@
       return unusedSymbols;
     };
 
-    Grid.prototype.getSymbolsUsed = function(indices) {
-      var ind, _i, _len, _results;
-      _results = [];
-      for (_i = 0, _len = indices.length; _i < _len; _i++) {
-        ind = indices[_i];
-        if (this.data[ind] != null) {
-          _results.push(this.data[ind]);
-        }
-      }
-      return _results;
-    };
-
     return Grid;
 
   })();
@@ -172,15 +201,15 @@
     function OnlyAvailableValueStrategy() {}
 
     OnlyAvailableValueStrategy.prototype.getCandidateMoves = function(grid) {
-      var emptyCellIndex, moves, validValues, _i, _len, _ref;
+      var emptyCell, moves, validValues, _i, _len, _ref;
       moves = [];
-      _ref = grid.getEmptyCellIndices();
+      _ref = grid.getEmptyCells();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        emptyCellIndex = _ref[_i];
-        validValues = grid.getValidValuesByIndex(emptyCellIndex);
+        emptyCell = _ref[_i];
+        validValues = grid.getValidValues(emptyCell);
         if (validValues.length === 1) {
           moves.push({
-            index: emptyCellIndex,
+            cell: emptyCell,
             symbol: validValues[0]
           });
         }
@@ -196,23 +225,23 @@
     function OnlyPositionInCollectionStrategy() {}
 
     OnlyPositionInCollectionStrategy.prototype.getCandidateMoves = function(grid) {
-      var collection, index, moves, positions, symbol, symbolPositions, validValue, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref, _ref1, _ref2, _ref3;
+      var cell, cells, moves, positions, symbol, symbolPositions, validValue, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref, _ref1, _ref2, _ref3;
       moves = [];
-      _ref = grid.indexCollections;
+      _ref = grid.collections;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        collection = _ref[_i];
+        cells = _ref[_i];
         positions = {};
         _ref1 = grid.symbols;
         for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
           symbol = _ref1[_j];
           positions[symbol] = [];
         }
-        for (_k = 0, _len2 = collection.length; _k < _len2; _k++) {
-          index = collection[_k];
-          _ref2 = grid.getValidValuesByIndex(index);
+        for (_k = 0, _len2 = cells.length; _k < _len2; _k++) {
+          cell = cells[_k];
+          _ref2 = grid.getValidValues(cell);
           for (_l = 0, _len3 = _ref2.length; _l < _len3; _l++) {
             validValue = _ref2[_l];
-            positions[validValue].push(index);
+            positions[validValue].push(cell);
           }
         }
         _ref3 = grid.symbols;
@@ -221,7 +250,7 @@
           symbolPositions = positions[symbol];
           if (symbolPositions.length === 1) {
             moves.push({
-              index: symbolPositions[0],
+              cell: symbolPositions[0],
               symbol: symbol
             });
           }
@@ -260,17 +289,17 @@
     function RandomMoveStrategy() {}
 
     RandomMoveStrategy.prototype.getCandidateMoves = function(grid) {
-      var emptyCellIndices, indexToSet, symbol, validValues;
-      emptyCellIndices = grid.getEmptyCellIndices();
-      indexToSet = emptyCellIndices[0];
-      validValues = grid.getValidValuesByIndex(indexToSet);
+      var cellToSet, emptyCells, symbol, validValues;
+      emptyCells = grid.getEmptyCells();
+      cellToSet = emptyCells[0];
+      validValues = grid.getValidValues(cellToSet);
       return (function() {
         var _i, _len, _results;
         _results = [];
         for (_i = 0, _len = validValues.length; _i < _len; _i++) {
           symbol = validValues[_i];
           _results.push({
-            index: indexToSet,
+            cell: cellToSet,
             symbol: symbol
           });
         }
@@ -303,12 +332,10 @@
       for (_i = 0, _len = movesToTry.length; _i < _len; _i++) {
         move = movesToTry[_i];
         newGrid = grid.clone();
-        newGrid.data[move.index] = move.symbol;
+        newGrid.setCellValue(move.cell, move.symbol);
         solvedNewGrid = this.solve(newGrid);
         if (solvedNewGrid != null) {
           return solvedNewGrid;
-        } else {
-          console.log("failed move");
         }
       }
       return null;
@@ -355,22 +382,22 @@
         return expect(result).toEqual(false);
       });
     });
-    describe("getEmptyCellIndices", function() {
+    describe("getEmptyCells", function() {
       it("should exist", function() {
         var grid;
         grid = new Grid(GridData.wellRestrictedCellsGrid);
-        return expect(grid.getEmptyCellIndices).toBeDefined();
+        return expect(grid.getEmptyCells).toBeDefined();
       });
       it("should return correct count", function() {
         var grid, result;
         grid = new Grid(GridData.wellRestrictedCellsGrid);
-        result = grid.getEmptyCellIndices();
+        result = grid.getEmptyCells();
         return expect(result.length).toBe(63);
       });
       return it("should return correct count repeatedly", function() {
         var grid, result, results, _i, _len, _results;
         grid = new Grid(GridData.wellRestrictedCellsGrid);
-        results = [grid.getEmptyCellIndices(), grid.getEmptyCellIndices(), grid.getEmptyCellIndices()];
+        results = [grid.getEmptyCells(), grid.getEmptyCells(), grid.getEmptyCells()];
         _results = [];
         for (_i = 0, _len = results.length; _i < _len; _i++) {
           result = results[_i];
@@ -388,30 +415,48 @@
       it("should return empty array for filled cell", function() {
         var grid, result;
         grid = new Grid(GridData.completeGrid);
-        result = grid.getValidValues(0, 0);
+        result = grid.getValidValues({
+          x: 0,
+          y: 0
+        });
         return expect(result.length).toBe(0);
       });
       it("should return all values for unrestricted cell", function() {
         var grid, result;
         grid = new Grid(GridData.emptyGrid);
-        result = grid.getValidValues(3, 4);
+        result = grid.getValidValues({
+          x: 3,
+          y: 4
+        });
         return expect(result.length).toBe(9);
       });
       it("should return missing values for single value cell", function() {
         var grid, result;
         grid = new Grid(GridData.almostCompleteGrid);
-        result = grid.getValidValues(8, 8);
+        result = grid.getValidValues({
+          x: 8,
+          y: 8
+        });
         expect(result.length).toBe(1);
         return expect(result[0]).toBe(8);
       });
       return it("should return missing values for restricted cells", function() {
         var grid, result1, result2, result3;
         grid = new Grid(GridData.restrictedSquareGrid);
-        result1 = grid.getValidValues(7, 0);
+        result1 = grid.getValidValues({
+          x: 7,
+          y: 0
+        });
         expect(result1.length).toBe(3);
-        result2 = grid.getValidValues(0, 2);
+        result2 = grid.getValidValues({
+          x: 0,
+          y: 2
+        });
         expect(result2.length).toBe(3);
-        result3 = grid.getValidValues(0, 3);
+        result3 = grid.getValidValues({
+          x: 0,
+          y: 3
+        });
         return expect(result3.length).toBe(7);
       });
     });
@@ -442,49 +487,49 @@
         return expect(strategy.getCandidateMoves).toBeDefined();
       });
       return it("should find squares that can only have one number in", function() {
-        var gridWithHoles, move, moves, movesFor21, movesFor72, movesFor8;
+        var gridWithHoles, move, moves, movesFor0x8, movesFor2x2, movesFor8x0;
         gridWithHoles = new Grid(GridData.wellRestrictedCellsGrid);
         moves = strategy.getCandidateMoves(gridWithHoles);
         expect(moves.length).toBe(3);
-        movesFor8 = (function() {
+        movesFor8x0 = (function() {
           var _i, _len, _results;
           _results = [];
           for (_i = 0, _len = moves.length; _i < _len; _i++) {
             move = moves[_i];
-            if (move.index === 8) {
+            if (move.cell.x === 8 && move.cell.y === 0) {
               _results.push(move);
             }
           }
           return _results;
         })();
-        movesFor21 = (function() {
+        movesFor2x2 = (function() {
           var _i, _len, _results;
           _results = [];
           for (_i = 0, _len = moves.length; _i < _len; _i++) {
             move = moves[_i];
-            if (move.index === 8) {
+            if (move.cell.x === 2 && move.cell.y === 2) {
               _results.push(move);
             }
           }
           return _results;
         })();
-        movesFor72 = (function() {
+        movesFor0x8 = (function() {
           var _i, _len, _results;
           _results = [];
           for (_i = 0, _len = moves.length; _i < _len; _i++) {
             move = moves[_i];
-            if (move.index === 8) {
+            if (move.cell.x === 0 && move.cell.y === 8) {
               _results.push(move);
             }
           }
           return _results;
         })();
-        expect(movesFor8.length).toBe(1);
-        expect(movesFor8[0].symbol).toBe(9);
-        expect(movesFor21.length).toBe(1);
-        expect(movesFor21[0].symbol).toBe(9);
-        expect(movesFor72.length).toBe(1);
-        return expect(movesFor72[0].symbol).toBe(9);
+        expect(movesFor8x0.length).toBe(1);
+        expect(movesFor8x0[0].symbol).toBe(9);
+        expect(movesFor2x2.length).toBe(1);
+        expect(movesFor2x2[0].symbol).toBe(9);
+        expect(movesFor0x8.length).toBe(1);
+        return expect(movesFor0x8[0].symbol).toBe(9);
       });
     });
   });
@@ -504,7 +549,10 @@
         gridWithHoles = new Grid(GridData.onePositionInCollectionGrid);
         moves = strategy.getCandidateMoves(gridWithHoles);
         expect(moves.length).toBe(1);
-        expect(moves[0].index).toBe(8);
+        expect(moves[0].cell).toEqual({
+          x: 8,
+          y: 0
+        });
         return expect(moves[0].symbol).toBe(9);
       });
     });
@@ -525,7 +573,10 @@
         grid = new Grid(GridData.almostCompleteGrid);
         moves = strategy.getCandidateMoves(grid);
         expect(moves.length).toBe(1);
-        expect(moves[0].index).toBe(80);
+        expect(moves[0].cell).toEqual({
+          x: 8,
+          y: 8
+        });
         return expect(moves[0].symbol).toBe(8);
       });
     });

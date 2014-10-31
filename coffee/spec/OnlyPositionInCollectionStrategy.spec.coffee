@@ -15,5 +15,5 @@ describe "OnlyPositionInCollectionStrategy", ->
 
 			moves = strategy.getCandidateMoves gridWithHoles
 			expect(moves.length).toBe(1)
-			expect(moves[0].index).toBe(8)
+			expect(moves[0].cell).toEqual({x:8,y:0})
 			expect(moves[0].symbol).toBe(9)
