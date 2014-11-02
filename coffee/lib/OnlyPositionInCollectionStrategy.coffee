@@ -3,18 +3,22 @@ class OnlyPositionInCollectionStrategy
 	getCandidateMoves: (grid) ->
 		moves = []
 
-		for cells in grid.collections
+		for collection in grid.collections
 
-			positions = {}
+			cellsByValue = {}
 			for symbol in grid.symbols
-				positions[symbol] = []
-			for cell in cells
+				cellsByValue[symbol] = []
+			for cell in collection
 				for validValue in grid.getValidValues cell
-					positions[validValue].push cell
+					cellsByValue[validValue].push cell
 
 			for symbol in grid.symbols
-				symbolPositions = positions[symbol]
-				if symbolPositions.length is 1
-					moves.push {cell: symbolPositions[0], symbol: symbol, strategy: this.constructor.name}
+				cellsForSymbol = cellsByValue[symbol]
+				if cellsForSymbol.length is 1
+					moves.push {
+						cell: cellsForSymbol[0]
+						symbol: symbol
+						strategy: this.constructor.name
+					}
 
 		return moves

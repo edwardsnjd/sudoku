@@ -12,7 +12,7 @@ describe "Solver", ->
 
 		it "should return completed grids", ->
 			result = solver.solve new Grid(GridData.completeGrid)
-			expect(result.data).toEqual GridData.completeGrid
+			expect(result.getData()).toEqual GridData.completeGrid
 
 		it "should return null for invalid grids", ->
 			result = solver.solve new Grid(GridData.invalidRowGrid)
@@ -20,12 +20,12 @@ describe "Solver", ->
 
 		it "should solve final missing cell", ->
 			result = solver.solve new Grid(GridData.almostCompleteGrid)
-			expect(result.data).toEqual GridData.completeGrid
+			expect(result.getData()).toEqual GridData.completeGrid
 
 		it "should solve mainly complete grid", ->
 			result = solver.solve new Grid(GridData.mainlyCompleteGrid)
-			expect(result.data).toEqual GridData.completeGrid
+			expect(result.getData()).toEqual GridData.completeGrid
 
 		it "should solve newspaper grid", ->
 			result = solver.solve new Grid(GridData.newspaperGrid)
-			expect(result.data).not.toBeNull()
+			expect(result.getData()).not.toBeNull()
