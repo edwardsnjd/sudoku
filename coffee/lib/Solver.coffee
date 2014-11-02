@@ -13,6 +13,7 @@ class Solver
 		# Try to solve a cell
 		movesToTry = @moveStrategy.getCandidateMoves grid
 		for move in movesToTry
+			console.log grid.getEmptyCells().length + ": Trying move from " + move.strategy
 			# Recurse. NB This will obviously gobble stack space
 			newGrid = grid.clone()
 			newGrid.setCellValue move.cell, move.symbol

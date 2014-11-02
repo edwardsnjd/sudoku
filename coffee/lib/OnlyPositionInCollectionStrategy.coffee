@@ -15,6 +15,6 @@ class OnlyPositionInCollectionStrategy
 			for symbol in grid.symbols
 				symbolPositions = positions[symbol]
 				if symbolPositions.length is 1
-					moves.push {cell: symbolPositions[0], symbol: symbol}
+					moves.push {cell: symbolPositions[0], symbol: symbol, strategy: this.constructor.name}
 
 		return moves

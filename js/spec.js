@@ -210,7 +210,8 @@
         if (validValues.length === 1) {
           moves.push({
             cell: emptyCell,
-            symbol: validValues[0]
+            symbol: validValues[0],
+            strategy: this.constructor.name
           });
         }
       }
@@ -251,7 +252,8 @@
           if (symbolPositions.length === 1) {
             moves.push({
               cell: symbolPositions[0],
-              symbol: symbol
+              symbol: symbol,
+              strategy: this.constructor.name
             });
           }
         }
@@ -300,11 +302,12 @@
           symbol = validValues[_i];
           _results.push({
             cell: cellToSet,
-            symbol: symbol
+            symbol: symbol,
+            strategy: this.constructor.name
           });
         }
         return _results;
-      })();
+      }).call(this);
     };
 
     return RandomMoveStrategy;
@@ -331,6 +334,7 @@
       movesToTry = this.moveStrategy.getCandidateMoves(grid);
       for (_i = 0, _len = movesToTry.length; _i < _len; _i++) {
         move = movesToTry[_i];
+        console.log(grid.getEmptyCells().length + ": Trying move from " + move.strategy);
         newGrid = grid.clone();
         newGrid.setCellValue(move.cell, move.symbol);
         solvedNewGrid = this.solve(newGrid);
